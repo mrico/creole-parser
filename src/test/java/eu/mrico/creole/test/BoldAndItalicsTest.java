@@ -1,5 +1,6 @@
 package eu.mrico.creole.test;
 
+import eu.mrico.creole.ASTDebugger;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
@@ -38,7 +39,7 @@ public class BoldAndItalicsTest {
 				.addAll(Text.asArray("be able")))
 			.addAll(Text.asArray(" to cross lines.")
 			);
-				
+                
 		assertEquals(expected, is);
 	}
 	

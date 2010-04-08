@@ -6,9 +6,6 @@ import org.junit.Test;
 
 import eu.mrico.creole.Creole;
 import eu.mrico.creole.ast.Document;
-import eu.mrico.creole.ast.LineBreak;
-import eu.mrico.creole.ast.Link;
-import eu.mrico.creole.ast.Paragraph;
 import eu.mrico.creole.ast.Preformatted;
 import eu.mrico.creole.ast.Text;
 
@@ -24,7 +21,7 @@ public class PreformattedTest {
 						"}}}\n");
 		
 		Document expected = (Document) new Document()			
-			.add(new Preformatted("\n//This// does **not** get [[formatted]]\n"));
+			.add(new Preformatted("//This// does **not** get [[formatted]]\n"));
 			
 		assertEquals(expected, is);		
 	}
@@ -40,7 +37,7 @@ public class PreformattedTest {
 				"}}}\n");
 		
 		Document expected = (Document) new Document()			
-			.add(new Preformatted("\nif (x != NULL) {\n"+
+			.add(new Preformatted("if (x != NULL) {\n"+
 					"  for (i = 0; i < size; i++) {\n"+
 					"    if (x[i] > 0) {\n"+
 					"      x[i]--;\n"+
@@ -51,11 +48,11 @@ public class PreformattedTest {
 	
 	@Test
 	public void inlineNoWiki() {
-		Document is = Creole.parse("Some examples of markup are: {{{** <i>this</i> ** }}}");
+		Document is = Creole.parse("Some examples of markup are: {{{** <i>this</i> ** }} }}}}");
 
 		Document expected = (Document) new Document()			
 			.addAll(Text.asArray("Some examples of markup are: "))
-			.add(new Preformatted("** <i>this</i> ** "));
+			.add(new Preformatted("** <i>this</i> ** }} }"));
 			
 		assertEquals(expected, is);		
 	}

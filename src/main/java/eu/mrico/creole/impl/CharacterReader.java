@@ -61,6 +61,10 @@ class CharacterReader {
 		for(int i=0; i < c; i++)
 			next();			
 	}
+
+        public void push(char c) throws IOException {
+            stack.addLast(c);
+        }
 		
 	public Character next() throws IOException {
 		return next(true);

@@ -1,5 +1,6 @@
 package eu.mrico.creole.test;
 
+import eu.mrico.creole.ASTDebugger;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
@@ -25,7 +26,7 @@ public class ParagraphTest {
 			.addAll(Text.asArray("This is my text."))
 			.add(new Paragraph()
 				.addAll(Text.asArray("This is more text. I'm not a new paragraph.")));
-		
+                
 		assertEquals(expected, is);		
 	}
 }

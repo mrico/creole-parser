@@ -59,12 +59,21 @@ public class XHtmlWriter implements CreoleWriter, Visitor {
 			throw new RuntimeException(e);
 		}
 	}
-	
-	private void writeSimpleTag(String tagName, Element elem) {
+
+        private void writeSimpleTag(String tagName, Element elem) {
+            writeSimpleTag(tagName, elem, false);
+        }
+
+	private void writeSimpleTag(String tagName, Element elem, boolean escape) {
 		try {
 			writer.write("<" + tagName + ">");
 			if(elem instanceof Text) {
-				writer.write( ((Text)elem).getValue());
+                            String s = ((Text)elem).getValue();
+                            if(escape) {
+                                s = s.replaceAll("<", "&lt;");
+                                s = s.replaceAll(">", "&gt;");
+                            }
+                            writer.write(s);
 			} else {
 				for(Element child : elem) {
 					child.accept(this);
@@ -179,7 +188,9 @@ public class XHtmlWriter implements CreoleWriter, Visitor {
 
 	@Override
 	public void visit(Preformatted preformatted) {
-		writeSimpleTag("pre", preformatted);
+            String tagName = preformatted.isInline() ? "span" : "pre";
+            
+            writeSimpleTag(tagName, preformatted, true);
 	}
 
 	@Override

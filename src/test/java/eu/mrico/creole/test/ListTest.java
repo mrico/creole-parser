@@ -25,8 +25,7 @@ public class ListTest {
 	
 		Document expected = (Document) new Document()
 			.add(new List(List.UNORDERED)
-				.add(new ListItem().addAll(Text.asArray("Item 1")))
-				.add(new ListItem()
+				.add(new ListItem().addAll(Text.asArray("Item 1"))				
 					.add(new List()
 						.add(new ListItem().addAll(Text.asArray("Item 1.1")))))
 				.add(new ListItem().addAll(Text.asArray("Item 2"))));
@@ -44,8 +43,7 @@ public class ListTest {
 	
 		Document expected = (Document) new Document()
 			.add(new List(List.ORDERED)
-				.add(new ListItem().addAll(Text.asArray("Item 1")))
-				.add(new ListItem()
+				.add(new ListItem().addAll(Text.asArray("Item 1"))				
 					.add(new List(List.ORDERED)
 						.add(new ListItem().addAll(Text.asArray("Item 1.1")))))
 				.add(new ListItem().addAll(Text.asArray("Item 2"))));

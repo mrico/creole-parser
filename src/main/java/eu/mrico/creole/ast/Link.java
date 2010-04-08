@@ -10,7 +10,11 @@ public class Link extends BaseElement {
 	public String getTarget() {
 		return target;
 	}
-	
+
+        public Link(String target) {
+            this(target, target);
+        }
+
 	public Link(String label, String target) {
 		super();
 		this.target = target;

@@ -17,7 +17,7 @@ public class HtmlWriterTest {
 	
 	@Test
 	public void htmlWrtier() throws CreoleException, FileNotFoundException {
-		InputStream in = getClass().getResourceAsStream("/wikicreole1.txt");
+		InputStream in = getClass().getResourceAsStream("/creole1.0test.txt");
 		assertNotNull(in);
 				
 		Document doc = Creole.parse(in);
