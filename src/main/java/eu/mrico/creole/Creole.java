@@ -7,25 +7,30 @@ import java.io.StringReader;
 import eu.mrico.creole.ast.Document;
 
 public class Creole {
-	
-	public static Document parse(String s) {		
-		try {
-			CreoleParser parser = CreoleParserFactory.newInstance().newParser();
-			return parser.parse(new StringReader(s));
-			
-		} catch (CreoleException e) {
-			throw new RuntimeException(e);
-		}
-	}
-	
-	public static Document parse(InputStream in) {		
-		try {
-			CreoleParser parser = CreoleParserFactory.newInstance().newParser();
-			return parser.parse(new InputStreamReader(in));
-			
-		} catch (CreoleException e) {
-			throw new RuntimeException(e);
-		}
-	}
-		
+
+    public static Document parse(String s) {
+        try {
+            CreoleParser parser = CreoleParserFactory.newInstance().newParser();
+            return parser.parse(new StringReader(s));
+
+        } catch (CreoleException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static Document parse(InputStream in) {
+        try {
+            CreoleParser parser = CreoleParserFactory.newInstance().newParser();
+            return parser.parse(new InputStreamReader(in));
+
+        } catch (CreoleException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    public static void main(String args[]) throws CreoleException {
+        Document document = Creole.parse(System.in);
+        new XHtmlWriter().write(document, System.out);
+    }
 }
