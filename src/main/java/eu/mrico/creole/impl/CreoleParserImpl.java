@@ -423,7 +423,7 @@ class CreoleParserImpl implements CreoleParser {
     }
 
     private ListItem parseListItem(String s, char listChar) throws IOException {
-        s = s.replaceAll("^[\\" + listChar + " ]*", "");
+        s = s.replaceAll("^\\" + listChar + "+ *", "");
 
         ListItem item = new ListItem();
         parseString(item, s);
