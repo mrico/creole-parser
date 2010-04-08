@@ -9,7 +9,8 @@ public class Document extends BaseElement {
 	public void accept(Visitor visitor) {
 		visitor.visit(this);
 	}
-	
+
+
 	
 	@Override
 	public String toString() {		

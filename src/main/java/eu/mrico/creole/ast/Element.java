@@ -12,5 +12,9 @@ public interface Element extends Iterable<Element> {
 	Element addAll(Collection<? extends Element> elements);
 	
 	void accept(Visitor visitor);
+
+        void cleanup();
+
+        boolean canClean();
 		
 }

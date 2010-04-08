@@ -75,6 +75,25 @@ public abstract class BaseElement implements Element {
 		return true;		
 	}
 
+        @Override
+        public void cleanup() {
+            Iterator<Element> it = children.iterator();
+            while(it.hasNext()) {
+                Element elem = it.next();
+                
+                if(elem.canClean()) {
+                    it.remove();
+                } else {
+                    elem.cleanup();
+                }
+            }
+        }
+
+        @Override
+        public boolean canClean() {
+            return false;
+        }
+
 	@Override
 	public String toString() {
 		String name = getClass().getName();

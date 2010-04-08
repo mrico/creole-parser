@@ -9,5 +9,12 @@ public class Paragraph extends BaseElement {
 	public void accept(Visitor visitor) {
 		visitor.visit(this);
 	}
+
+    @Override
+    public boolean canClean() {
+        return children.isEmpty();
+    }
+
+
 	
 }
