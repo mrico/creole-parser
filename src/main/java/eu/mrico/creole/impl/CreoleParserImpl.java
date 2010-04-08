@@ -96,7 +96,7 @@ class CreoleParserImpl implements CreoleParser {
                 }
             }
 
-            document.cleanup();
+            document.clean();
 
             return document;
 

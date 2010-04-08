@@ -13,7 +13,7 @@ public interface Element extends Iterable<Element> {
 	
 	void accept(Visitor visitor);
 
-        void cleanup();
+        void clean();
 
         boolean canClean();
 		

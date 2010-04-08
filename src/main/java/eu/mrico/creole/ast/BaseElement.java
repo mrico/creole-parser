@@ -76,7 +76,7 @@ public abstract class BaseElement implements Element {
 	}
 
         @Override
-        public void cleanup() {
+        public void clean() {
             Iterator<Element> it = children.iterator();
             while(it.hasNext()) {
                 Element elem = it.next();
@@ -84,7 +84,7 @@ public abstract class BaseElement implements Element {
                 if(elem.canClean()) {
                     it.remove();
                 } else {
-                    elem.cleanup();
+                    elem.clean();
                 }
             }
         }
