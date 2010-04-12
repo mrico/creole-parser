@@ -63,6 +63,10 @@ class CreoleParserImpl implements CreoleParser {
                 } else if (line.startsWith("=")) {
                     document.add(parseHeading(line));
 
+                    this.parent = new Paragraph();
+                    document.add(parent);
+                    newParagraph = true;
+
                 } else if (line.startsWith("* ")) {
                     // unordered list
                     parent.add(parseList(line, false));
