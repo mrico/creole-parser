@@ -128,13 +128,15 @@ class CreoleParserImpl implements CreoleParser {
         CharacterReader cReader = new CharacterReader(new StringReader((s)));
         Character c = null;
 
+        boolean escaped = false;
+
         while ((c = cReader.next()) != null) {
             Character nextChar = cReader.peek();
             if (nextChar == null) {
-                nextChar = '\0';
+                nextChar = '\n';
             }
 
-            if (c == '*' && nextChar == '*') {
+            if (!escaped && c == '*' && nextChar == '*') {
                 cReader.skip(1);
                 if (ctx instanceof Bold) {
                     ctx = ctx.getParent(); // close bold
@@ -144,7 +146,7 @@ class CreoleParserImpl implements CreoleParser {
                     ctx = bold;
                 }
 
-            } else if (c == '/' && nextChar == '/') {
+            } else if (!escaped && c == '/' && nextChar == '/') {
                 cReader.skip(1);
                 if (ctx instanceof Italic) {
                     ctx = ctx.getParent(); // close italic
@@ -153,37 +155,39 @@ class CreoleParserImpl implements CreoleParser {
                     ctx.add(italic);
                     ctx = italic;
                 }
-            } else if (c == '{' && nextChar == '{' && cReader.readAhead() == '{') {
+            } else if (!escaped && c == '{' && "{{".equals(cReader.peek(2))) {
                 cReader.skip(2);
                 ctx.add(readInlineNoWiki(cReader));
 
-            } else if (c == '[' && nextChar == '[') {
+            } else if (!escaped && c == '[' && nextChar == '[') {
                 cReader.skip(1);
                 ctx.add(readLink(cReader));
 
-            } else if (c == '\\' && nextChar == '\\') {
+            } else if (!escaped && c == '\\' && nextChar == '\\') {
                 cReader.skip(1);
                 ctx.add(new LineBreak());
 
             } else if (c == 'h') {
                 String tmp = "h" + cReader.peek(6);
                 if ("http://".equals(tmp)) {
-                    parseRawLink(ctx, cReader);
+                    parseRawLink(ctx, cReader, escaped);
                 } else {
                     ctx.add(new Text(c));
                 }
 
-            } else if (c == '~') {
-                // TODO: escape
+            } else if (!escaped && c == '~' && (nextChar != ' ' && nextChar != '\n')) {
+                escaped = true;
+
             } else {
                 ctx.add(new Text(c));
+                escaped = false;
             }
         }
 
         return ctx;
     }
 
-    private void parseRawLink(Element ctx, CharacterReader cReader) throws IOException {
+   private void parseRawLink(Element ctx, CharacterReader cReader, boolean escaped) throws IOException {
         StringBuffer sb = new StringBuffer("h");
         Character c = null;
         while ((c = cReader.next()) != null && c != ' ') {
@@ -200,7 +204,9 @@ class CreoleParserImpl implements CreoleParser {
             sb.deleteCharAt(sb.length() - 1);
         }
 
-        ctx.add(new Link(sb.toString()));
+        String s = sb.toString();
+
+        ctx.add(escaped ? new Text(s) : new Link(s));
 
         if (appendLc) {
             ctx.add(new Text(lc));
@@ -209,8 +215,6 @@ class CreoleParserImpl implements CreoleParser {
         if (c != null) {
             ctx.add(new Text(c));
         }
-
-
     }
 
     private Link readLink(CharacterReader cReader) throws IOException {

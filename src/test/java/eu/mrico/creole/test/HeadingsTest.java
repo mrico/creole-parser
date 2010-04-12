@@ -7,6 +7,7 @@ import static org.junit.Assert.*;
 import eu.mrico.creole.Creole;
 import eu.mrico.creole.ast.Document;
 import eu.mrico.creole.ast.Heading;
+import eu.mrico.creole.ast.Paragraph;
 import eu.mrico.creole.ast.Text;
 
 /**
@@ -31,7 +32,8 @@ public class HeadingsTest {
 		
 		Document expected = (Document) new Document()
 			.add(new Heading(2, "Level 2"))
-			.addAll(Text.asArray("Test."));
+                        .add(new Paragraph()
+                            .addAll(Text.asArray("Test.")));
 		
 		assertEquals(expected, is);
 	}
