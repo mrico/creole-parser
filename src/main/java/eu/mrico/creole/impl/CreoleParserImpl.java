@@ -316,15 +316,15 @@ class CreoleParserImpl implements CreoleParser {
         return new Preformatted(sb.toString());
     }
 
-    private Preformatted readInlineNoWiki(CharacterReader cReader) throws IOException {
+     private Preformatted readInlineNoWiki(CharacterReader cReader) throws IOException {
         StringBuffer sb = new StringBuffer();
 
         Character c = null;
         while ((c = cReader.next()) != null) {
             if (c == '}') {
-                Character nextChar = null;
                 int closingBraces;
-                for (closingBraces = 1; (nextChar = cReader.readAhead()) != null && nextChar == '}'; closingBraces++);
+                String tmp = cReader.peek(10);
+                for (closingBraces = 1; closingBraces <= tmp.length() && tmp.charAt(closingBraces-1) == '}'; closingBraces++);
 
                 int extraBraces = closingBraces >= 3 ? closingBraces - 3 : closingBraces;
                 for (int i = 0; i < extraBraces; i++) {
@@ -344,6 +344,7 @@ class CreoleParserImpl implements CreoleParser {
 
         return new Preformatted(true, sb.toString().trim());
     }
+
 
     private Table parseTable(String s) throws IOException {
         Table table = new Table();
