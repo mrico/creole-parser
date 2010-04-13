@@ -67,11 +67,11 @@ class CreoleParserImpl implements CreoleParser {
                     document.add(parent);
                     newParagraph = true;
 
-                } else if (line.startsWith("* ")) {
+                } else if (line.matches("^\\*[^\\*].*")) {
                     // unordered list
                     parent.add(parseList(line, false));
 
-                } else if (line.startsWith("# ")) {
+                } else if (line.startsWith("#")) {
                     // ordered list
                     parent.add(parseList(line, true));
 
