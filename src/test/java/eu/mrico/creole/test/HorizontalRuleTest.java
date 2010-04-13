@@ -16,14 +16,14 @@ import eu.mrico.creole.ast.Text;
  * @see http://www.wikicreole.org/wiki/Creole1.0#section-Creole1.0-LineBreaks
  */
 public class HorizontalRuleTest {
-	
-	@Test	
-	public void horizontalRule() {
-		Document is = Creole.parse("----");
-		
-		Document expected = (Document) new Document()						
-			.add(new HorizontalRule());
-						
-		assertEquals(expected, is);		
-	}
+    
+    @Test   
+    public void horizontalRule() {
+        Document is = Creole.parse("----");
+        
+        Document expected = (Document) new Document()                       
+            .add(new HorizontalRule());
+                        
+        assertEquals(expected, is);     
+    }
 }

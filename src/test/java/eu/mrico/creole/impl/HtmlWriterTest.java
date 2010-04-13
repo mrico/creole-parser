@@ -14,15 +14,14 @@ import eu.mrico.creole.XHtmlWriter;
 import eu.mrico.creole.ast.Document;
 
 public class HtmlWriterTest {
-	
-	@Test
-	public void htmlWrtier() throws CreoleException, FileNotFoundException {
-		InputStream in = getClass().getResourceAsStream("/creole1.0test.txt");
-		assertNotNull(in);
-				
-		Document doc = Creole.parse(in);
-				
-		new XHtmlWriter().write(doc, new FileOutputStream("creole1.0test.html"));
-	}
-	
+
+    @Test
+    public void htmlWrtier() throws CreoleException, FileNotFoundException {
+        InputStream in = getClass().getResourceAsStream("/creole1.0test.txt");
+        assertNotNull(in);
+
+        Document doc = Creole.parse(in);
+
+        new XHtmlWriter().write(doc, new FileOutputStream("creole1.0test.html"));
+    }
 }

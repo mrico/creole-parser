@@ -22,9 +22,10 @@ class CharacterReader {
     public String peek(int c) throws IOException {
         StringBuffer sb = new StringBuffer();
 
-        if(c <= stack.size()) {
-            for(int i = stack.size() - 1; i >= stack.size() - c; i--)
+        if (c <= stack.size()) {
+            for (int i = stack.size() - 1; i >= stack.size() - c; i--) {
                 sb.append(stack.get(i));
+            }
 
             return sb.toString();
         }

@@ -28,7 +28,6 @@ public class Creole {
         }
     }
 
-
     public static void main(String args[]) throws CreoleException {
         Document document = Creole.parse(System.in);
         new XHtmlWriter().write(document, System.out);

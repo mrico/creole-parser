@@ -187,7 +187,7 @@ class CreoleParserImpl implements CreoleParser {
         return ctx;
     }
 
-   private void parseRawLink(Element ctx, CharacterReader cReader, boolean escaped) throws IOException {
+    private void parseRawLink(Element ctx, CharacterReader cReader, boolean escaped) throws IOException {
         StringBuffer sb = new StringBuffer("h");
         Character c = null;
         while ((c = cReader.next()) != null && c != ' ') {
@@ -316,7 +316,7 @@ class CreoleParserImpl implements CreoleParser {
         return new Preformatted(sb.toString());
     }
 
-     private Preformatted readInlineNoWiki(CharacterReader cReader) throws IOException {
+    private Preformatted readInlineNoWiki(CharacterReader cReader) throws IOException {
         StringBuffer sb = new StringBuffer();
 
         Character c = null;
@@ -324,7 +324,7 @@ class CreoleParserImpl implements CreoleParser {
             if (c == '}') {
                 int closingBraces;
                 String tmp = cReader.peek(10);
-                for (closingBraces = 1; closingBraces <= tmp.length() && tmp.charAt(closingBraces-1) == '}'; closingBraces++);
+                for (closingBraces = 1; closingBraces <= tmp.length() && tmp.charAt(closingBraces - 1) == '}'; closingBraces++);
 
                 int extraBraces = closingBraces >= 3 ? closingBraces - 3 : closingBraces;
                 for (int i = 0; i < extraBraces; i++) {
@@ -344,7 +344,6 @@ class CreoleParserImpl implements CreoleParser {
 
         return new Preformatted(true, sb.toString().trim());
     }
-
 
     private Table parseTable(String s) throws IOException {
         Table table = new Table();

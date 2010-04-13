@@ -23,7 +23,7 @@ import eu.mrico.creole.ast.Text;
  * @see http://www.wikicreole.org/wiki/Creole1.0#section-Creole1.0-Tables
  */
 public class TableTest {
-			
+            
     @Test
     public void simpleTable() {
 

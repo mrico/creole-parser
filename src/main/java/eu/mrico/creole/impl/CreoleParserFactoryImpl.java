@@ -5,9 +5,8 @@ import eu.mrico.creole.CreoleParserFactory;
 
 public class CreoleParserFactoryImpl extends CreoleParserFactory {
 
-	@Override
-	public CreoleParser newParser() {
-		return new CreoleParserImpl();
-	}
-
+    @Override
+    public CreoleParser newParser() {
+        return new CreoleParserImpl();
+    }
 }

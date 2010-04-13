@@ -19,40 +19,40 @@ import eu.mrico.creole.ast.Table;
 import eu.mrico.creole.ast.Text;
 
 public interface Visitor {
-	
-	void visit(Document doc);
-	
-	void visit(Paragraph p);
-	
-	void visit(Heading h);
-	
-	void visit(Bold b);
-	
-	void vist(Cell c);
-	
-	void visit(HorizontalRule hr);
-	
-	void visit(Image i);
-	
-	void visit(Italic it);
-	
-	void visit(LineBreak lb);
-	
-	void visit(Link l);
-	
-	void visit(List l);
-	
-	void visit(ListItem li);
-	
-	void visit(Phrase p);
-	
-	void visit(Row row);
-	
-	void visit(Table table);
-	
-	void visit(Text text);
-	
-	void visit(Cell cell);
-	
-	void visit(Preformatted preformatted);
+
+    void visit(Document doc);
+
+    void visit(Paragraph p);
+
+    void visit(Heading h);
+
+    void visit(Bold b);
+
+    void vist(Cell c);
+
+    void visit(HorizontalRule hr);
+
+    void visit(Image i);
+
+    void visit(Italic it);
+
+    void visit(LineBreak lb);
+
+    void visit(Link l);
+
+    void visit(List l);
+
+    void visit(ListItem li);
+
+    void visit(Phrase p);
+
+    void visit(Row row);
+
+    void visit(Table table);
+
+    void visit(Text text);
+
+    void visit(Cell cell);
+
+    void visit(Preformatted preformatted);
 }

@@ -13,35 +13,35 @@ import eu.mrico.creole.ast.Text;
  * @see http://www.wikicreole.org/wiki/Creole1.0#section-Creole1.0-EscapeCharacter
  */
 public class EscapeCharacterTest {
-	
-	@Test	
-	public void escapeList() {
-		Document is = Creole.parse("~#1");
-		
-		Document expected = (Document) new Document()			
-			.addAll(Text.asArray("#1"));
-						
-		assertEquals(expected, is);		
-	}
+    
+    @Test   
+    public void escapeList() {
+        Document is = Creole.parse("~#1");
+        
+        Document expected = (Document) new Document()           
+            .addAll(Text.asArray("#1"));
+                        
+        assertEquals(expected, is);     
+    }
 
         @Test
-	public void linkWithEscapeCharacter() {
-		Document is = Creole.parse("http://www.foo.com/~bar/");
+    public void linkWithEscapeCharacter() {
+        Document is = Creole.parse("http://www.foo.com/~bar/");
 
-		Document expected = (Document) new Document()
-			.add(new Link("http://www.foo.com/~bar/"));
+        Document expected = (Document) new Document()
+            .add(new Link("http://www.foo.com/~bar/"));
 
-		assertEquals(expected, is);
-	}
+        assertEquals(expected, is);
+    }
 
         @Test
-	public void escapedRawLink() {
-		Document is = Creole.parse("~http://www.foo.com/");
+    public void escapedRawLink() {
+        Document is = Creole.parse("~http://www.foo.com/");
 
-		Document expected = (Document) new Document()
-			.add(new Text("http://www.foo.com/"));
+        Document expected = (Document) new Document()
+            .add(new Text("http://www.foo.com/"));
 
-		assertEquals(expected, is);
-	}
+        assertEquals(expected, is);
+    }
         
 }
