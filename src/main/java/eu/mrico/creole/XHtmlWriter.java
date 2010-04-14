@@ -1,9 +1,7 @@
 package eu.mrico.creole;
 
-import java.io.IOException;
+import eu.mrico.creole.ast.Plugin;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
 
 import eu.mrico.creole.ast.Bold;
 import eu.mrico.creole.ast.Cell;
@@ -23,42 +21,87 @@ import eu.mrico.creole.ast.Preformatted;
 import eu.mrico.creole.ast.Row;
 import eu.mrico.creole.ast.Table;
 import eu.mrico.creole.ast.Text;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
 
 public class XHtmlWriter implements CreoleWriter, Visitor {
+  
+    private XMLStreamWriter writer;
 
-    private Writer writer;
+    private Map<String, Collection<String>> styleClasses =
+            new HashMap<String, Collection<String>>();
+
+
+    public void addCssClass(String tagName, String[] cssClass) {
+        for(String cls : cssClass)
+            addCssClass(tagName, cls);
+    }
+
+    public void addCssClass(String tagName, String cssClass) {
+        Collection<String> cssClasses = styleClasses.get(tagName);
+
+        if(cssClasses == null) {
+            cssClasses = new ArrayList<String>();
+            styleClasses.put(tagName, cssClasses);
+        }
+        
+        cssClasses.add(cssClass);
+    }
+    
 
     @Override
     public void write(Document document, OutputStream out)
             throws CreoleException {
 
-        this.writer = new OutputStreamWriter(out);
-
-        document.accept(this);
-
         try {
+            XMLOutputFactory factory = XMLOutputFactory.newInstance();
+            this.writer = factory.createXMLStreamWriter(out);
+
+            document.accept(this);
+
             this.writer.close();
 
-        } catch (IOException e) {
-            throw new CreoleException(e);
+        } catch (XMLStreamException ex) {
+            throw new CreoleException(ex);
         }
     }
 
     private void writeText(String text) {
         try {
-            writer.write(text);
-        } catch (IOException e) {
+            writer.writeCharacters(text);
+            
+        } catch (XMLStreamException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private void writeSimpleTag(String tagName) {
+
+    private void writeStartElement(String tagName) {
         try {
-            writer.write("<" + tagName + "/>\n");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            writer.writeStartElement(tagName);
+
+            Collection<String> cssClasses = styleClasses.get(tagName);
+
+            if(cssClasses != null && ! cssClasses.isEmpty()) {
+                StringBuffer sb = new StringBuffer();
+
+                for(String cls : cssClasses) {
+                    sb.append(cls).append(" ");
+                }
+               
+                writer.writeAttribute("class", sb.toString().trim());
+            }
+
+        } catch (XMLStreamException ex) {
+            throw new RuntimeException(ex);
         }
     }
+
 
     private void writeSimpleTag(String tagName, Element elem) {
         writeSimpleTag(tagName, elem, false);
@@ -66,22 +109,24 @@ public class XHtmlWriter implements CreoleWriter, Visitor {
 
     private void writeSimpleTag(String tagName, Element elem, boolean escape) {
         try {
-            writer.write("<" + tagName + ">");
+            writeStartElement(tagName);
+            
             if (elem instanceof Text) {
                 String s = ((Text) elem).getValue();
                 if (escape) {
                     s = s.replaceAll("<", "&lt;");
                     s = s.replaceAll(">", "&gt;");
                 }
-                writer.write(s);
+                writer.writeCharacters(s);
             } else {
                 for (Element child : elem) {
                     child.accept(this);
                 }
             }
-            writer.write("</" + tagName + ">\n");
+            
+            writer.writeEndElement();
 
-        } catch (IOException e) {
+        } catch (XMLStreamException e) {
             throw new RuntimeException(e);
         }
     }
@@ -110,16 +155,21 @@ public class XHtmlWriter implements CreoleWriter, Visitor {
 
     @Override
     public void visit(HorizontalRule hr) {
-        writeSimpleTag("hr");
+        try {
+            writer.writeEmptyElement("hr");
+        } catch (XMLStreamException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     @Override
     public void visit(Image i) {
         try {
-            writer.write("<img src=\"" + i.getSource() + "\" alt=\""
-                    + i.getText() + "\" />");
-
-        } catch (IOException e) {
+            writeStartElement("img");
+            writer.writeAttribute("src", i.getSource());
+            writer.writeAttribute("alt", i.getText());
+            writer.writeEndElement();            
+        } catch (XMLStreamException e) {
             throw new RuntimeException(e);
         }
     }
@@ -131,18 +181,24 @@ public class XHtmlWriter implements CreoleWriter, Visitor {
 
     @Override
     public void visit(LineBreak lb) {
-        writeSimpleTag("br");
+        try {
+            writer.writeEmptyElement("br");
+        } catch (XMLStreamException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     @Override
     public void visit(Link l) {
         try {
-            writer.write("<a href=\"" + l.getTarget() + "\">");
-            for (Element child : l) {
+            writeStartElement("a");
+            writer.writeAttribute("href", l.getTarget());
+
+            for(Element child : l)
                 child.accept(this);
-            }
-            writer.write("</a>");
-        } catch (IOException e) {
+            
+            writer.writeEndElement();
+        } catch (XMLStreamException e) {
             throw new RuntimeException(e);
         }
     }
