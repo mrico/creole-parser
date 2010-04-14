@@ -22,6 +22,10 @@ public class HtmlWriterTest {
 
         Document doc = Creole.parse(in);
 
-        new XHtmlWriter().write(doc, new FileOutputStream("creole1.0test.html"));
+        XHtmlWriter writer = new XHtmlWriter();
+        writer.addCssClass("p", new String[] { "creole", "test" });
+        writer.addCssClass("pre", "code");
+        
+        writer.write(doc, new FileOutputStream("target/creole1.0test.html"));
     }
 }
