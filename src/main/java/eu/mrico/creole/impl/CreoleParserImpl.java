@@ -15,6 +15,7 @@ import eu.mrico.creole.ast.Link;
 import eu.mrico.creole.ast.List;
 import eu.mrico.creole.ast.ListItem;
 import eu.mrico.creole.ast.Paragraph;
+import eu.mrico.creole.ast.Plugin;
 import eu.mrico.creole.ast.Preformatted;
 import eu.mrico.creole.ast.Row;
 import eu.mrico.creole.ast.Table;
@@ -89,7 +90,7 @@ class CreoleParserImpl implements CreoleParser {
 
                 } else if (line.startsWith("----")) {
                     document.add(new HorizontalRule());
-
+                
                 } else {
                     if (!newParagraph) {
                         parent.add(new Text(" "));
@@ -167,6 +168,10 @@ class CreoleParserImpl implements CreoleParser {
                 cReader.skip(1);
                 ctx.add(new LineBreak());
 
+            } else if (!escaped && c == '<' && nextChar == '<') {
+                cReader.skip(1);
+                ctx.add(readPlugin(cReader));
+                
             } else if (c == 'h') {
                 String tmp = "h" + cReader.peek(6);
                 if ("http://".equals(tmp)) {
@@ -300,6 +305,34 @@ class CreoleParserImpl implements CreoleParser {
         }
 
         return new Image(src, alt);
+    }
+
+    private Plugin readPlugin(CharacterReader cReader) throws IOException {
+        String name = null;
+                
+        StringBuffer sb = new StringBuffer();
+
+        Character c = null;
+        while ((c = cReader.next()) != null) {
+
+            Character nextChar = cReader.peek();
+            if (nextChar == null) {
+                nextChar = '\0';
+            }
+           
+            if (c == '>' && nextChar == '>') {
+                cReader.skip(1);
+                break;
+
+            } else {
+                sb.append(c);
+            }
+        }
+
+        name = sb.toString();
+        name = name.trim();
+
+        return new Plugin(name);
     }
 
     private Preformatted readPreformatted() throws IOException {

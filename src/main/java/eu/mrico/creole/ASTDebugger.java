@@ -1,5 +1,6 @@
 package eu.mrico.creole;
 
+import eu.mrico.creole.ast.Plugin;
 import java.io.PrintWriter;
 
 import eu.mrico.creole.ast.Bold;
@@ -134,6 +135,11 @@ public class ASTDebugger implements Visitor {
     @Override
     public void visit(Preformatted preformatted) {
         print(preformatted);
+    }
+
+    @Override
+    public void visit(Plugin plugin) {
+        print(plugin);
     }
 
     private void print(Element elem) {

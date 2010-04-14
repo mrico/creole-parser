@@ -1,5 +1,6 @@
 package eu.mrico.creole;
 
+import eu.mrico.creole.ast.Plugin;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -196,5 +197,17 @@ public class XHtmlWriter implements CreoleWriter, Visitor {
     @Override
     public void vist(Cell c) {
         // TODO Auto-generated method stub
+    }
+
+    @Override
+    public void visit(Plugin plugin) {
+        CreolePluginHandler handler = Creole.getPlugin(plugin.getName());
+        if(handler == null) {
+            writeSimpleTag("strong", new Text("Unkown plugin: " + plugin.getName()));
+        } else {
+            Element elem = handler.execute(null);
+            elem.accept(this);
+        }
+        
     }
 }

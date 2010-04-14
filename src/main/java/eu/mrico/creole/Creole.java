@@ -5,8 +5,16 @@ import java.io.InputStreamReader;
 import java.io.StringReader;
 
 import eu.mrico.creole.ast.Document;
+import eu.mrico.creole.plugins.CurrentDateTimePlugin;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Creole {
+
+    private static Map<String, CreolePluginHandler> PLUGINS = new HashMap<String, CreolePluginHandler>();
+    static {
+        addPlugin(new CurrentDateTimePlugin());
+    }
 
     public static Document parse(String s) {
         try {
@@ -26,6 +34,18 @@ public class Creole {
         } catch (CreoleException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static void addPlugin(CreolePluginHandler plugin) {
+        PLUGINS.put(plugin.getName(), plugin);
+    }
+
+    public static void removePlugin(String pluginName) {
+        PLUGINS.remove(pluginName);
+    }
+
+    public static CreolePluginHandler getPlugin(String name) {
+        return PLUGINS.get(name);
     }
 
     public static void main(String args[]) throws CreoleException {

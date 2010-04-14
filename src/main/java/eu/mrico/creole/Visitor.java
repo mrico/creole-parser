@@ -13,6 +13,7 @@ import eu.mrico.creole.ast.List;
 import eu.mrico.creole.ast.ListItem;
 import eu.mrico.creole.ast.Paragraph;
 import eu.mrico.creole.ast.Phrase;
+import eu.mrico.creole.ast.Plugin;
 import eu.mrico.creole.ast.Preformatted;
 import eu.mrico.creole.ast.Row;
 import eu.mrico.creole.ast.Table;
@@ -55,4 +56,6 @@ public interface Visitor {
     void visit(Cell cell);
 
     void visit(Preformatted preformatted);
+
+    public void visit(Plugin plugin);
 }
