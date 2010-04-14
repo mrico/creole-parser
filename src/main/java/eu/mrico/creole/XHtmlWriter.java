@@ -1,6 +1,5 @@
 package eu.mrico.creole;
 
-import eu.mrico.creole.ast.Plugin;
 import java.io.OutputStream;
 
 import eu.mrico.creole.ast.Bold;
