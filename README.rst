@@ -9,6 +9,19 @@ Requirements
 ************
 
 This library requires Java 6 or higher.
+To build creole-parser you must have Apache Maven installed. (http://maven.apache.org)
+
+The creole-parser itself has no additional jar dependencies!
+
+
+Getting started
+***************
+
+Grap the latest sources from here and deploy the jar into your local maven repository: ::
+
+	git clone git@github.com:mrico/creole-parser.git
+	mvn install
+
 
 Usage
 *****
