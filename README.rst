@@ -27,3 +27,15 @@ Customize XHtmlWriter to use css classes: ::
 	writer.addCssClass("p", "section");
     
 	writer.write(doc, System.out);
+
+
+Customize XHtmlWriter to decorate specific elements: ::
+
+	Document doc = Creole.parse("** Some wiki markup **");
+
+	XHtmlWriter writer = new XHtmlWriter();
+	writer.setDecorator(Paragraph.class, new DivElementDecorator("section");
+
+	writer.write(doc, System.out);
+
+You can easily create your own decorators by implementing XHtmlElementDecorator.
