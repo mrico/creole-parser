@@ -1,8 +1,11 @@
-package eu.mrico.creole;
+package eu.mrico.creole.xhtml;
 
-import eu.mrico.creole.ast.Plugin;
+import eu.mrico.creole.CreoleException;
+import eu.mrico.creole.CreoleWriter;
+import eu.mrico.creole.Visitor;
 import java.io.OutputStream;
 
+import eu.mrico.creole.ast.Plugin;
 import eu.mrico.creole.ast.Bold;
 import eu.mrico.creole.ast.Cell;
 import eu.mrico.creole.ast.Document;
@@ -30,12 +33,14 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
 public class XHtmlWriter implements CreoleWriter, Visitor {
-  
+
     private XMLStreamWriter writer;
 
-    private Map<String, Collection<String>> styleClasses =
+    private Map<String, Collection<String>> cssClassesMap =
             new HashMap<String, Collection<String>>();
 
+    private Map<Class<? extends Element>, XHtmlElementDecorator> decoratorsMap =
+            new HashMap<Class<? extends Element>, XHtmlElementDecorator>();
 
     public void addCssClass(String tagName, String[] cssClass) {
         for(String cls : cssClass)
@@ -43,16 +48,20 @@ public class XHtmlWriter implements CreoleWriter, Visitor {
     }
 
     public void addCssClass(String tagName, String cssClass) {
-        Collection<String> cssClasses = styleClasses.get(tagName);
+        Collection<String> cssClasses = cssClassesMap.get(tagName);
 
         if(cssClasses == null) {
             cssClasses = new ArrayList<String>();
-            styleClasses.put(tagName, cssClasses);
+            cssClassesMap.put(tagName, cssClasses);
         }
-        
+
         cssClasses.add(cssClass);
     }
-    
+
+    public void setDecorator(Class<? extends Element> type, XHtmlElementDecorator decorator) {
+        decoratorsMap.put(type, decorator);
+    }
+
 
     @Override
     public void write(Document document, OutputStream out)
@@ -62,19 +71,28 @@ public class XHtmlWriter implements CreoleWriter, Visitor {
             XMLOutputFactory factory = XMLOutputFactory.newInstance();
             this.writer = factory.createXMLStreamWriter(out);
 
-            document.accept(this);
-
-            this.writer.close();
+            write(document, writer);
 
         } catch (XMLStreamException ex) {
             throw new CreoleException(ex);
         }
     }
 
+    public void write(Document document, XMLStreamWriter writer) throws CreoleException {
+        try {
+            this.writer = writer;
+            document.accept(this);
+            this.writer.close();
+
+        } catch(XMLStreamException e) {
+            throw new CreoleException(e);
+        }
+    }
+
     private void writeText(String text) {
         try {
             writer.writeCharacters(text);
-            
+
         } catch (XMLStreamException e) {
             throw new RuntimeException(e);
         }
@@ -85,7 +103,7 @@ public class XHtmlWriter implements CreoleWriter, Visitor {
         try {
             writer.writeStartElement(tagName);
 
-            Collection<String> cssClasses = styleClasses.get(tagName);
+            Collection<String> cssClasses = cssClassesMap.get(tagName);
 
             if(cssClasses != null && ! cssClasses.isEmpty()) {
                 StringBuffer sb = new StringBuffer();
@@ -93,7 +111,7 @@ public class XHtmlWriter implements CreoleWriter, Visitor {
                 for(String cls : cssClasses) {
                     sb.append(cls).append(" ");
                 }
-               
+
                 writer.writeAttribute("class", sb.toString().trim());
             }
 
@@ -109,8 +127,13 @@ public class XHtmlWriter implements CreoleWriter, Visitor {
 
     private void writeSimpleTag(String tagName, Element elem, boolean escape) {
         try {
+
+            XHtmlElementDecorator decorator = decoratorsMap.get(elem.getClass());
+            if(decorator != null)
+                decorator.before(elem, writer);
+
             writeStartElement(tagName);
-            
+
             if (elem instanceof Text) {
                 String s = ((Text) elem).getValue();
                 if (escape) {
@@ -123,8 +146,11 @@ public class XHtmlWriter implements CreoleWriter, Visitor {
                     child.accept(this);
                 }
             }
-            
+
             writer.writeEndElement();
+
+            if(decorator != null)
+                decorator.after(elem, writer);
 
         } catch (XMLStreamException e) {
             throw new RuntimeException(e);
@@ -165,10 +191,18 @@ public class XHtmlWriter implements CreoleWriter, Visitor {
     @Override
     public void visit(Image i) {
         try {
+            XHtmlElementDecorator decorator = decoratorsMap.get(Image.class);
+            if(decorator != null)
+                decorator.before(i, writer);
+
             writeStartElement("img");
             writer.writeAttribute("src", i.getSource());
             writer.writeAttribute("alt", i.getText());
-            writer.writeEndElement();            
+            writer.writeEndElement();
+
+            if(decorator != null)
+                decorator.after(i, writer);
+
         } catch (XMLStreamException e) {
             throw new RuntimeException(e);
         }
@@ -191,13 +225,21 @@ public class XHtmlWriter implements CreoleWriter, Visitor {
     @Override
     public void visit(Link l) {
         try {
+            XHtmlElementDecorator decorator = decoratorsMap.get(Link.class);
+            if(decorator != null)
+                decorator.before(l, writer);
+
             writeStartElement("a");
             writer.writeAttribute("href", l.getTarget());
 
             for(Element child : l)
                 child.accept(this);
-            
+
             writer.writeEndElement();
+
+            if(decorator != null)
+                decorator.before(l, writer);
+
         } catch (XMLStreamException e) {
             throw new RuntimeException(e);
         }
@@ -255,14 +297,13 @@ public class XHtmlWriter implements CreoleWriter, Visitor {
     }
 
     @Override
-    public void visit(Plugin plugin) {
-        CreolePluginHandler handler = Creole.getPlugin(plugin.getName());
-        if(handler == null) {
-            writeSimpleTag("strong", new Text("Unkown plugin: " + plugin.getName()));
-        } else {
-            Element elem = handler.execute(null);
-            elem.accept(this);
-        }
-        
+	public void visit(Plugin plugin) {
+		CreolePluginHandler handler = Creole.getPlugin(plugin.getName());
+		if(handler == null) {
+			writeSimpleTag("strong", new Text("Unkown plugin: " + plugin.getName()));
+		} else {
+			Element elem = handler.execute(null);
+			elem.accept(this);
+		}
     }
 }

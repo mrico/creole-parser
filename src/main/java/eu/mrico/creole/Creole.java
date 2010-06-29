@@ -8,6 +8,7 @@ import eu.mrico.creole.ast.Document;
 import eu.mrico.creole.plugins.CurrentDateTimePlugin;
 import java.util.HashMap;
 import java.util.Map;
+import eu.mrico.creole.xhtml.XHtmlWriter;
 
 public class Creole {
 
