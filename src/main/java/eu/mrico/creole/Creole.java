@@ -5,6 +5,7 @@ import java.io.InputStreamReader;
 import java.io.StringReader;
 
 import eu.mrico.creole.ast.Document;
+import eu.mrico.creole.xhtml.XHtmlWriter;
 
 public class Creole {
 

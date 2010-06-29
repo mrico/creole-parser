@@ -1,6 +1,5 @@
-package eu.mrico.creole.impl;
+package eu.mrico.creole.xhtml;
 
-import eu.mrico.creole.XHtmlElementDecorator;
 import eu.mrico.creole.ast.Element;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;

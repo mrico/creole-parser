@@ -1,4 +1,4 @@
-package eu.mrico.creole;
+package eu.mrico.creole.xhtml;
 
 import eu.mrico.creole.ast.Element;
 import javax.xml.stream.XMLStreamException;

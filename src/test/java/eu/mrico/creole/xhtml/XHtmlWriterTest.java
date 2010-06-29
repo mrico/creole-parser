@@ -1,10 +1,7 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+package eu.mrico.creole.xhtml;
 
-package eu.mrico.creole;
-
+import eu.mrico.creole.Creole;
+import eu.mrico.creole.CreoleException;
 import eu.mrico.creole.ast.Link;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -13,17 +10,12 @@ import eu.mrico.creole.ast.Heading;
 import eu.mrico.creole.ast.Document;
 import eu.mrico.creole.ast.Image;
 import eu.mrico.creole.ast.Paragraph;
-import eu.mrico.creole.impl.DivElementDecorator;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-/**
- *
- * @author m2819
- */
 public class XHtmlWriterTest {
 
     public XHtmlWriterTest() {

@@ -23,6 +23,11 @@ Grap the latest sources from here and deploy the jar into your local maven repos
 	mvn install
 
 
+Just use it (standalone): ::
+
+	java -jar creole-parser-${version}.jar < sample.wiki > sample.html
+
+
 Usage
 *****
 

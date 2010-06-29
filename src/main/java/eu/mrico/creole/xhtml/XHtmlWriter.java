@@ -1,5 +1,8 @@
-package eu.mrico.creole;
+package eu.mrico.creole.xhtml;
 
+import eu.mrico.creole.CreoleException;
+import eu.mrico.creole.CreoleWriter;
+import eu.mrico.creole.Visitor;
 import java.io.OutputStream;
 
 import eu.mrico.creole.ast.Bold;
