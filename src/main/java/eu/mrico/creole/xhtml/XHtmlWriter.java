@@ -287,7 +287,7 @@ public class XHtmlWriter implements CreoleWriter, Visitor {
     @Override
     public void visit(Preformatted preformatted) {
         String tagName = preformatted.isInline() ? "tt" : "pre";
-        writeSimpleTag(tagName, preformatted, true);
+        writeSimpleTag(tagName, preformatted, preformatted.isInline());
     }
 
     @Override
